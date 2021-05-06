@@ -8,17 +8,20 @@ const client = new W3CWebsocket ('ws://192.168.0.199:8000');
 class App extends React.Component{
   constructor(props){
     super(props);
-    this.state = {name: ''}
+    this.state = {uname: '',
+                  isloggedin: false,
+                  messages: []}
   }
 
   handleChange = (e) => {
-    this.setState({name: e.target.value})
+    this.setState({uname: e.target.value})
   }
 
   handleClick = (val) => {
+    this.setState({isloggedin: true})
     client.send(JSON.stringify({
       type: "message",
-      msg: val
+      user: val
     }));
   }
 
@@ -28,18 +31,35 @@ class App extends React.Component{
     };
 
     client.onmessage = (message) => {
-      const nameFromServer = JSON.parse(message.data);
-      console.log('From Server: ', nameFromServer);
+      const dataFromServer = JSON.parse(message.data);
+      console.log('From Server: ', dataFromServer);
+      if(dataFromServer.type === 'message') {
+        this.setState((state) => ({
+          messages: [... state.messages,{
+            user: dataFromServer.user
+          }]
+        }))
+      }
     };
   }
 
   render(){
     return(
       <div>
-        <input onChange = {this.handleChange} value = {this.state.name} label = "Enter Name" />
-        <button onClick = {() => this.handleClick(this.state.name)}>
-          Submit
-        </button>
+        {this.state.isloggedin ?
+        <div>
+          You are logged in
+          <button onClick = {() => this.handleClick(this.state.uname)} >
+            Check Username
+          </button>
+          {this.state.messages.map(msg => <p>User: {msg.user}</p>)}
+        </div>
+        :<div style = {{ padding: '200px 40px' }} >
+          <input placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
+          <button onClick = {() => this.handleClick(this.state.uname)}>
+            Submit
+          </button>
+        </div>}
       </div>
     )
   }
