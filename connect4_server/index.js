@@ -14,8 +14,8 @@ const wsServer = new webSocketServer({
 });
 
 wsServer.on('request', function(request){
-    console.log('New user connected');
-    if(numOfPlayer < 2){
+    /*if(numOfPlayer < 2){*/
+      console.log('New user connected');
       numOfPlayer += 1;
       connection = request.accept(null, request.origin);
       player[numOfPlayer] = connection;
@@ -30,5 +30,5 @@ wsServer.on('request', function(request){
           }
         }
       });
-    }
+    /*}*/
 });
