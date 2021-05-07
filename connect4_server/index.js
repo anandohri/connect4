@@ -8,6 +8,7 @@ console.log('listening to port 8000');
 
 const player = {};
 let numOfPlayer = 0;
+const board = {}
 
 const wsServer = new webSocketServer({
   httpServer: server
