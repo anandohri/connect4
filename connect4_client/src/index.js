@@ -10,7 +10,34 @@ class App extends React.Component{
     super(props);
     this.state = {uname: '',
                   isloggedin: false,
-                  messages: []}
+                  moves: {}}
+  }
+
+  renderBoard = () => {
+    const rows = [];
+    for(let i = 1; i <= 6; ++i){
+      const rowItem = [];
+      for(let j = 1; j <= 7; ++j){
+        const ind = (7 * i) + j;
+        if(this.state.moves[ind] == 'player1'){
+          rowItem.push(<div className = 'boardCell'>
+                          <button className = 'player1' />
+                        </div>)
+        }
+        else if(this.state.moves[ind] == 'player2'){
+          rowItem.push(<div className = 'boardCell'>
+                          <button className = 'player2' />
+                        </div>)
+        }
+        else {
+          rowItem.push(<div className = 'boardCell'>
+                          <button className = 'blank' />
+                        </div>)
+        }
+      }
+      rows.push(<div>{rowItem}</div>)
+    }
+    return rows;
   }
 
   handleChange = (e) => {
@@ -48,16 +75,12 @@ class App extends React.Component{
       <div>
         {this.state.isloggedin ?
         <div>
-          You are logged in
-          <button onClick = {() => this.handleClick(this.state.uname)} >
-            Check Username
-          </button>
-          {this.state.messages.map(msg => <p>User: {msg.user}</p>)}
+          {this.renderBoard()}
         </div>
-        :<div style = {{ padding: '200px 40px' }} >
-          <input placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
-          <button onClick = {() => this.handleClick(this.state.uname)}>
-            Submit
+        :<div className = 'login' >
+          <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
+          <button className = 'submit' onClick = {() => this.handleClick(this.state.uname)}>
+            Login
           </button>
         </div>}
       </div>
