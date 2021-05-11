@@ -63,3 +63,10 @@ code {
   width: 45px;
   display: inline-block;
 }
+
+.winnerCell {
+  background-color: #ffd700;
+  height: 45px;
+  width: 45px;
+  display: inline-block;
+}
