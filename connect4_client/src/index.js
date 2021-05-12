@@ -187,7 +187,43 @@ class App extends React.Component{
       <div>
         {this.state.isloggedin ?
         <div>
-          {this.renderBoard()}
+          {this.state.prev == 0 ? 
+            <div>
+            {this.state.pnum == 1 ?
+              <div>
+                <h2 className = 'redMove'>Your Move</h2>
+              </div>
+              : <div>
+                  <h2 className = 'redMove'>Red's Move</h2>
+                </div>
+            }
+            </div>
+            : <div>
+              {this.state.prev != this.state.pnum ? 
+                <div>
+                  {this.state.pnum == 1 ?
+                    <div>
+                      <h2  className = 'redMove'>Your Move</h2>
+                    </div>
+                    : <div>
+                        <h2 className = 'blueMove'>Your Move</h2>
+                      </div>
+                  }
+                </div>
+                : <div>
+                  {this.state.pnum == 1 ?
+                    <div>
+                      <h2  className = 'blueMove'>Blue's Move</h2>
+                    </div>
+                    : <div>
+                        <h2 className = 'redMove'>Red's Move</h2>
+                      </div>
+                  }
+                  </div>
+              }
+              </div>
+            }
+              {this.renderBoard()}
         </div>
         :<div className = 'login' >
           <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />

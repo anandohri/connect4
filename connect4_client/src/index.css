@@ -41,6 +41,8 @@ code {
   border-radius: 20px;
   height: 40px;
   width: 40px;
+  margin-left: 2px;
+  margin-top: 2px;
 }
 
 .player2 {
@@ -48,6 +50,8 @@ code {
   border-radius: 20px;
   height: 40px;
   width: 40px;
+  margin-left: 2px;
+  margin-top: 2px;
 }
 
 .blank {
@@ -55,6 +59,8 @@ code {
   border-radius: 20px;
   height: 40px;
   width: 40px;
+  margin-left: 2px;
+  margin-top: 2px;
 }
 
 .boardCell {
@@ -69,4 +75,12 @@ code {
   height: 45px;
   width: 45px;
   display: inline-block;
+}
+
+.blueMove {
+  color: #0000ff;
+}
+
+.redMove {
+  color: #ff0000;
 }
