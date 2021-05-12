@@ -84,3 +84,11 @@ code {
 .redMove {
   color: #ff0000;
 }
+
+.player1win {
+  color: #ff0000;
+}
+
+.player2win {
+  color: #0000ff;
+}
