@@ -187,8 +187,9 @@ class Connect4 extends React.Component{
         }
       }
       else if(dataFromServer.type === 'restart'){
-        alert('Player: ' + dataFromServer.user + ' wants to restart the game. Restarting');
+        alert('Player: ' + dataFromServer.user + ' wants to restart the game.');
         this.setState({moves: {}, prev: 0, isWinner: 'NA'});
+        alert('Game Reset');
       }
     };
   }
