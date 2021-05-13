@@ -38,57 +38,78 @@ code {
 
 .player1 {
   background-color: #ff0000;
-  border-radius: 20px;
-  height: 40px;
-  width: 40px;
-  margin-left: 2px;
-  margin-top: 2px;
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  margin-left: 3px;
+  margin-top: 3px;
 }
 
 .player2 {
   background-color: #2f00ff;
-  border-radius: 20px;
-  height: 40px;
-  width: 40px;
-  margin-left: 2px;
-  margin-top: 2px;
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  margin-left: 3px;
+  margin-top: 3px;
 }
 
 .blank {
   background-color: #ffffff;
-  border-radius: 20px;
-  height: 40px;
-  width: 40px;
-  margin-left: 2px;
-  margin-top: 2px;
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  margin-left: 3px;
+  margin-top: 3px;
 }
 
 .boardCell {
   background-color: #000000;
-  height: 45px;
-  width: 45px;
+  height: 65px;
+  width: 65px;
   display: inline-block;
 }
 
 .winnerCell {
   background-color: #ffd600;
-  height: 45px;
-  width: 45px;
+  height: 65px;
+  width: 65px;
   display: inline-block;
 }
 
 .blueMove {
+  text-align: center;
   color: #0000ff;
 }
 
 .redMove {
+  text-align: center;
   color: #ff0000;
 }
 
 .player1win {
+  text-align: center;
   color: #ff0000;
 }
 
 .player2win {
+  text-align: center;
   color: #0000ff;
+}
+
+.playBoard {
+  margin-left: 35%;
+  width: 30%;
+}
+
+.restart {
+  background-color: #12eba9;
+  font-size: 18px;
+  font-weight: bolder;
+  margin-top: 40px;
+  margin-left: 35%;
+  height: 30px;
+  width: 150px;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 20px;
 }

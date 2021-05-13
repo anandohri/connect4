@@ -5,7 +5,7 @@ import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
 const client = new W3CWebsocket ('ws://192.168.0.199:8000');
 
-class App extends React.Component{
+class Connect4 extends React.Component{
   constructor(props){
     super(props);
     this.state = {pnum: 0,
@@ -147,6 +147,13 @@ class App extends React.Component{
     }
   }
 
+  handleRestart = () => {
+    client.send(JSON.stringify({
+      type: "restart",
+      user: this.state.uname,
+    }));
+  }
+
   componentDidMount(){
     client.onopen = () => {
       console.log('connected');
@@ -178,6 +185,10 @@ class App extends React.Component{
           this.setState({moves: move, prev: 1});
           this.calcWinner(1);
         }
+      }
+      else if(dataFromServer.type === 'restart'){
+        alert('Player: ' + dataFromServer.user + ' wants to restart the game. Restarting');
+        this.setState({moves: {}, prev: 0, isWinner: 'NA'});
       }
     };
   }
@@ -230,7 +241,12 @@ class App extends React.Component{
               }
             </div>
           }
-          {this.renderBoard()}
+          <div className = 'playBoard'>
+            {this.renderBoard()}
+            <button className = 'restart' onClick = {this.handleRestart}>
+              Restart Game
+            </button>
+          </div>
         </div>
         :<div className = 'login' >
           <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
@@ -243,7 +259,13 @@ class App extends React.Component{
   }
 }
 
+class Test extends React.Component{
+  render(){
+    return alert("hello");
+  }
+}
+
 ReactDOM.render(
-  <App />,
+  <Connect4 />,
   document.getElementById('root')
 );
