@@ -69,7 +69,14 @@ class Connect4 extends React.Component{
         }
       }
       if(found === 'y'){
-        this.setState({moves: moves, isWinner: currPlayer});
+        this.setState({moves: moves});
+        if(this.state.pnum === current){
+          client.send(JSON.stringify({
+            type: "winner",
+            user: this.state.uname,
+            number: this.state.pnum
+          }));
+        }
         break;
       }
     }
@@ -191,6 +198,9 @@ class Connect4 extends React.Component{
         this.setState({moves: {}, prev: 0, isWinner: 'NA'});
         alert('Game Reset');
       }
+      else if(dataFromServer.type === 'winner'){
+        this.setState({isWinner: dataFromServer.user + dataFromServer.number})
+      }
     };
   }
 
@@ -201,19 +211,14 @@ class Connect4 extends React.Component{
         <div>
           {this.state.isWinner != 'NA' ?
           <div>
-            <h1 className = {`${this.state.isWinner}win`}>====Winner: {this.state.isWinner}==== </h1>
+            <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
+              ====Winner: {this.state.isWinner.substring(0, this.state.isWinner.length-1)}====
+            </h2>
           </div>
           : <div>
             {this.state.prev == 0 ? 
               <div>
-              {this.state.pnum == 1 ?
-                <div>
-                  <h2 className = 'redMove'>Your Move</h2>
-                </div>
-                : <div>
-                    <h2 className = 'redMove'>Red's Move</h2>
-                  </div>
-              }
+                <h2 className = 'firstMove'>Make a move</h2>
               </div>
               : <div>
                 {this.state.prev != this.state.pnum ? 
@@ -262,7 +267,7 @@ class Connect4 extends React.Component{
 
 class Test extends React.Component{
   render(){
-    return alert("hello");
+    return "hello".substring("hello".length - 1, "hello".length);
   }
 }
 
