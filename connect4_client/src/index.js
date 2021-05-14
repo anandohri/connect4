@@ -124,7 +124,6 @@ class Connect4 extends React.Component{
   }
 
   handleLogin = (val) => {
-    this.setState({isloggedin: true})
     client.send(JSON.stringify({
       type: "login",
       user: val
@@ -170,7 +169,7 @@ class Connect4 extends React.Component{
       const dataFromServer = JSON.parse(message.data);
       console.log('From Server: ', dataFromServer);
       if(dataFromServer.type === 'login' && dataFromServer.user === this.state.uname){
-        this.setState({pnum: dataFromServer.id})
+        this.setState({pnum: dataFromServer.id, isloggedin: true})
       }
       else if(dataFromServer.type === 'message' && dataFromServer.user === this.state.uname && this.state.pnum !== this.state.prev) {
         const move = this.state.moves;
@@ -200,6 +199,8 @@ class Connect4 extends React.Component{
       }
       else if(dataFromServer.type === 'winner'){
         this.setState({isWinner: dataFromServer.user + dataFromServer.number})
+      }else if(dataFromServer.type === 'loginFailed'){
+        alert("Room full")
       }
     };
   }
