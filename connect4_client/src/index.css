@@ -87,23 +87,24 @@ code {
   color: #ff0000;
 }
 
-.player1win {
+.win1 {
   text-align: center;
   color: #ff0000;
 }
 
-.player2win {
+.win2 {
   text-align: center;
   color: #0000ff;
 }
 
 .playBoard {
   margin-left: 35%;
+  margin-top: 5%;
   width: 30%;
 }
 
 .restart {
-  background-color: #e233ca;
+  background-color: #d44c4c;
   font-size: 18px;
   font-weight: bolder;
   margin-top: 40px;
@@ -112,4 +113,9 @@ code {
   width: 150px;
   font-family: 'Courier New', Courier, monospace;
   border-radius: 20px;
+}
+
+.firstMove {
+  text-align: center;
+  color: #ffffff;
 }
