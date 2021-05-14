@@ -7,8 +7,7 @@ server.listen(webSocketsServerPort);
 console.log('listening to port 8000');
 
 const player = {};
-let numOfPlayer = 0;
-const move = {};
+let id = 1;
 
 const wsServer = new webSocketServer({
   httpServer: server
@@ -16,21 +15,24 @@ const wsServer = new webSocketServer({
 
 wsServer.on('request', function(request){
   const connection = request.accept(null, request.origin);
-    if(numOfPlayer < 2){
-      connection.on('message', function(message){
-        if(message.type === 'utf8'){
-          const move = JSON.parse(message.utf8Data)
-          if(move.type === 'login'){
-            console.log('New user connected');
-            numOfPlayer += 1;
-            player[numOfPlayer] = connection;
-            move['id'] = numOfPlayer;
-            console.log('Sending ', move);
-          }
-          for(key in player){
-            player[key].sendUTF(JSON.stringify(move));
-          }
+  connection.on('message', function(message){
+    if(message.type === 'utf8'){
+      const move = JSON.parse(message.utf8Data)
+      if(move.type === 'login'){
+        if(id <= 2){
+          move['id'] = id;
+          player[id] = connection;
+          console.log('Sending ', move);
+          player[id].sendUTF(JSON.stringify(move));
+          id += 1;
+        } else{
+            connection.sendUTF(JSON.stringify({type: 'loginFailed'}))
         }
-      });
+      }else {
+        for(key in player){
+          player[key].sendUTF(JSON.stringify(move));
+        }
+      }
     }
+  });
 });
