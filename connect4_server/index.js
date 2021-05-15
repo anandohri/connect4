@@ -30,6 +30,7 @@ wsServer.on('request', function(request){
         }
       }else {
         for(key in player){
+          console.log(move)
           player[key].sendUTF(JSON.stringify(move));
         }
       }
