@@ -137,7 +137,8 @@ class Connect4 extends React.Component{
         client.send(JSON.stringify({
           type: "message",
           user: this.state.uname,
-          move: id
+          move: id,
+          id: this.state.pnum
         }))
       }
       else{
@@ -146,7 +147,8 @@ class Connect4 extends React.Component{
           client.send(JSON.stringify({
             type: "message",
             user: this.state.uname,
-            move: id
+            move: id,
+            id: this.state.pnum
           }))
         }
       }
@@ -171,13 +173,13 @@ class Connect4 extends React.Component{
       if(dataFromServer.type === 'login' && dataFromServer.user === this.state.uname){
         this.setState({pnum: dataFromServer.id, isloggedin: true})
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.user === this.state.uname && this.state.pnum !== this.state.prev) {
+      else if(dataFromServer.type === 'message' && dataFromServer.id == this.state.pnum && this.state.pnum !== this.state.prev) {
         const move = this.state.moves;
         move[dataFromServer.move] = 'player' + this.state.pnum;
         this.setState({moves: move, prev: this.state.pnum});
         this.calcWinner(this.state.pnum);
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.user !== this.state.uname &&
+      else if(dataFromServer.type === 'message' && dataFromServer.id != this.state.pnum &&
                 (this.state.pnum === this.state.prev || this.state.prev === 0)) {
         if(this.state.pnum === 1){
           const move = this.state.moves;
@@ -213,7 +215,8 @@ class Connect4 extends React.Component{
           {this.state.isWinner != 'NA' ?
           <div>
             <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
-              ====Winner: {this.state.isWinner.substring(0, this.state.isWinner.length-1)}====
+              ====Winner: Player{this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}:
+                   {this.state.isWinner.substring(0, this.state.isWinner.length-1)}====
             </h2>
           </div>
           : <div>
