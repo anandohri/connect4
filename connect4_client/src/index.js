@@ -5,7 +5,7 @@ import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
 const client = new W3CWebsocket ('ws://192.168.0.199:8000');
 
-class App extends React.Component{
+class Connect4 extends React.Component{
   constructor(props){
     super(props);
     this.state = {pnum: 0,
@@ -69,7 +69,14 @@ class App extends React.Component{
         }
       }
       if(found === 'y'){
-        this.setState({moves: moves, isWinner: currPlayer});
+        this.setState({moves: moves});
+        if(this.state.pnum === current){
+          client.send(JSON.stringify({
+            type: "winner",
+            user: this.state.uname,
+            number: this.state.pnum
+          }));
+        }
         break;
       }
     }
@@ -117,7 +124,6 @@ class App extends React.Component{
   }
 
   handleLogin = (val) => {
-    this.setState({isloggedin: true})
     client.send(JSON.stringify({
       type: "login",
       user: val
@@ -131,7 +137,8 @@ class App extends React.Component{
         client.send(JSON.stringify({
           type: "message",
           user: this.state.uname,
-          move: id
+          move: id,
+          id: this.state.pnum
         }))
       }
       else{
@@ -140,11 +147,19 @@ class App extends React.Component{
           client.send(JSON.stringify({
             type: "message",
             user: this.state.uname,
-            move: id
+            move: id,
+            id: this.state.pnum
           }))
         }
       }
     }
+  }
+
+  handleRestart = () => {
+    client.send(JSON.stringify({
+      type: "restart",
+      user: this.state.uname,
+    }));
   }
 
   componentDidMount(){
@@ -156,15 +171,15 @@ class App extends React.Component{
       const dataFromServer = JSON.parse(message.data);
       console.log('From Server: ', dataFromServer);
       if(dataFromServer.type === 'login' && dataFromServer.user === this.state.uname){
-        this.setState({pnum: dataFromServer.id})
+        this.setState({pnum: dataFromServer.id, isloggedin: true})
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.user === this.state.uname && this.state.pnum !== this.state.prev) {
+      else if(dataFromServer.type === 'message' && dataFromServer.id == this.state.pnum && this.state.pnum !== this.state.prev) {
         const move = this.state.moves;
         move[dataFromServer.move] = 'player' + this.state.pnum;
         this.setState({moves: move, prev: this.state.pnum});
         this.calcWinner(this.state.pnum);
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.user !== this.state.uname &&
+      else if(dataFromServer.type === 'message' && dataFromServer.id != this.state.pnum &&
                 (this.state.pnum === this.state.prev || this.state.prev === 0)) {
         if(this.state.pnum === 1){
           const move = this.state.moves;
@@ -179,6 +194,16 @@ class App extends React.Component{
           this.calcWinner(1);
         }
       }
+      else if(dataFromServer.type === 'restart'){
+        alert('Player: ' + dataFromServer.user + ' wants to restart the game.');
+        this.setState({moves: {}, prev: 0, isWinner: 'NA'});
+        alert('Game Reset');
+      }
+      else if(dataFromServer.type === 'winner'){
+        this.setState({isWinner: dataFromServer.user + dataFromServer.number})
+      }else if(dataFromServer.type === 'loginFailed'){
+        alert("Room full")
+      }
     };
   }
 
@@ -189,19 +214,15 @@ class App extends React.Component{
         <div>
           {this.state.isWinner != 'NA' ?
           <div>
-            <h1 className = {`${this.state.isWinner}win`}>====Winner: {this.state.isWinner}==== </h1>
+            <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
+              ====Winner: Player{this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}:
+                   {this.state.isWinner.substring(0, this.state.isWinner.length-1)}====
+            </h2>
           </div>
           : <div>
             {this.state.prev == 0 ? 
               <div>
-              {this.state.pnum == 1 ?
-                <div>
-                  <h2 className = 'redMove'>Your Move</h2>
-                </div>
-                : <div>
-                    <h2 className = 'redMove'>Red's Move</h2>
-                  </div>
-              }
+                <h2 className = 'firstMove'>Make a move</h2>
               </div>
               : <div>
                 {this.state.prev != this.state.pnum ? 
@@ -230,7 +251,12 @@ class App extends React.Component{
               }
             </div>
           }
-          {this.renderBoard()}
+          <div className = 'playBoard'>
+            {this.renderBoard()}
+            <button className = 'restart' onClick = {this.handleRestart}>
+              Restart Game
+            </button>
+          </div>
         </div>
         :<div className = 'login' >
           <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
@@ -243,7 +269,13 @@ class App extends React.Component{
   }
 }
 
+class Test extends React.Component{
+  render(){
+    return "hello".substring("hello".length - 1, "hello".length);
+  }
+}
+
 ReactDOM.render(
-  <App />,
+  <Connect4 />,
   document.getElementById('root')
 );
