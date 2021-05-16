@@ -13,7 +13,8 @@ class Connect4 extends React.Component{
                   isloggedin: false,
                   moves: {},
                   prev: 0,
-                  isWinner: 'NA'}
+                  isWinner: 'NA',
+                  ready: 'n'}
   }
 
   calcWinner = (current) => {
@@ -201,8 +202,12 @@ class Connect4 extends React.Component{
       }
       else if(dataFromServer.type === 'winner'){
         this.setState({isWinner: dataFromServer.user + dataFromServer.number})
-      }else if(dataFromServer.type === 'loginFailed'){
+      }
+      else if(dataFromServer.type === 'loginFailed'){
         alert("Room full")
+      }
+      else if(dataFromServer.type === 'ready'){
+        this.setState({ready: 'y'});
       }
     };
   }
@@ -214,22 +219,37 @@ class Connect4 extends React.Component{
         <div>
           {this.state.isWinner != 'NA' ?
           <div>
+            {this.state.pnum == this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length) ?
+              <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
+                  You Won
+              </h2>
+              : <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
+                    You Lost
+                </h2>
+            }
             <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
-              ====Winner: Player{this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}:
-                   {this.state.isWinner.substring(0, this.state.isWinner.length-1)}====
+              ====Player{this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}:
+                    {this.state.isWinner.substring(0, this.state.isWinner.length-1)} WINS====
             </h2>
           </div>
           : <div>
+            {this.state.pnum === 1? 
+              <h2 className = 'redMove'>You are Red</h2>
+              : <h2 className = 'blueMove'>You are Blue</h2>
+            }
             {this.state.prev == 0 ? 
               <div>
-                <h2 className = 'firstMove'>Make a move</h2>
+                {this.state.ready === 'y' ? 
+                  <h2 className = 'firstMove'>Make a move</h2>
+                  : <h2 className = 'firstMove'>Waiting for other player to connect</h2>
+                }
               </div>
               : <div>
                 {this.state.prev != this.state.pnum ? 
                   <div>
                     {this.state.pnum == 1 ?
                       <div>
-                        <h2  className = 'redMove'>Your Move</h2>
+                        <h2 className = 'redMove'>Your Move</h2>
                       </div>
                       : <div>
                           <h2 className = 'blueMove'>Your Move</h2>
@@ -258,11 +278,14 @@ class Connect4 extends React.Component{
             </button>
           </div>
         </div>
-        :<div className = 'login' >
-          <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
-          <button className = 'submit' onClick = {() => this.handleLogin(this.state.uname)}>
-            Login
-          </button>
+        :<div> 
+          <p> Connect 4</p>
+          <div className = 'login' >
+            <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
+            <button className = 'submit' onClick = {() => this.handleLogin(this.state.uname)}>
+              Login
+            </button>
+          </div>
         </div>}
       </div>
     )
