@@ -25,13 +25,20 @@ wsServer.on('request', function(request){
           console.log('Sending ', move);
           player[id].sendUTF(JSON.stringify(move));
           id += 1;
+          if(id === 3){
+            move['type'] = 'ready';
+            for(key in player){
+              player[key].sendUTF(JSON.stringify(move));
+            }
+          }
         } else{
             connection.sendUTF(JSON.stringify({type: 'loginFailed'}))
         }
       }else {
-        for(key in player){
-          console.log(move)
-          player[key].sendUTF(JSON.stringify(move));
+        if(id === 3){
+          for(key in player){
+            player[key].sendUTF(JSON.stringify(move));
+          }
         }
       }
     }
