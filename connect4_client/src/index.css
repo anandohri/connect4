@@ -14,8 +14,7 @@ code {
 }
 
 .login {
-  padding-top: 20%;
-  padding-left: 31%;
+  margin-left: 35%;
 }
 
 .uname {
@@ -118,4 +117,12 @@ code {
 .firstMove {
   text-align: center;
   color: #ffffff;
+}
+
+p{
+  font-size: 85px;
+  text-align: center;
+  color: #ee096c;
+  font-family: 'Girassol', cursive;
+  font-weight: 900;
 }
