@@ -36,7 +36,7 @@ code {
 }
 
 .player1 {
-  background-color: #ff0000;
+  background-color: #FF0000;
   border-radius: 30px;
   height: 60px;
   width: 60px;
@@ -45,7 +45,7 @@ code {
 }
 
 .player2 {
-  background-color: #2f00ff;
+  background-color: #fff64f;
   border-radius: 30px;
   height: 60px;
   width: 60px;
@@ -62,44 +62,64 @@ code {
   margin-top: 3px;
 }
 
+.blankUnmovable {
+  background-color: #ffffff;
+  opacity: 50%;
+  border-radius: 30px;
+  height: 60px;
+  width: 60px;
+  margin-left: 3px;
+  margin-top: 3px;
+}
+
 .boardCell {
-  background-color: #000000;
+  background-color: #0000FF;
   height: 65px;
   width: 65px;
   display: inline-block;
 }
 
 .winnerCell {
-  background-color: #ffd600;
+  background-color: #8cfacc;
   height: 65px;
   width: 65px;
   display: inline-block;
 }
 
-.blueMove {
+.yellowMove {
+  margin-top: 0px;
+  font-size: 18px;
   text-align: center;
-  color: #0000ff;
+  color: #fff64f;
 }
 
 .redMove {
+  margin-top: 0px;
+  font-size: 18px;
   text-align: center;
-  color: #ff0000;
+  color: #FF0000;
 }
 
-.win1 {
+.win {
+  margin-top: 0px;
+  font-size: 46.5px;
   text-align: center;
-  color: #ff0000;
+  color: #8cfacc;
 }
 
-.win2 {
+.lost {
+  margin-top: 0px;
+  font-size: 46.5px;
   text-align: center;
-  color: #0000ff;
+  color: #000000;
 }
 
 .playBoard {
-  margin-left: 35%;
-  margin-top: 5%;
-  width: 30%;
+  float: left;
+  margin-top: -25.5%;
+  margin-left: 53%;
+  width: 50%;
+  min-width: 50%;
 }
 
 .restart {
@@ -107,7 +127,8 @@ code {
   font-size: 18px;
   font-weight: bolder;
   margin-top: 40px;
-  margin-left: 35%;
+  margin-left: 36%;
+  margin-bottom: 60px;
   height: 30px;
   width: 150px;
   font-family: 'Courier New', Courier, monospace;
@@ -115,14 +136,31 @@ code {
 }
 
 .firstMove {
+  margin-top: 0px;
   text-align: center;
   color: #ffffff;
 }
 
-p{
+.header {
   font-size: 85px;
   text-align: center;
   color: #ee096c;
   font-family: 'Girassol', cursive;
   font-weight: 900;
+}
+
+.loggedInHeader {
+  font-size: 45px;
+  text-align: center;
+  color: #ee096c;
+  font-family: 'Girassol', cursive;
+  font-weight: 900;
+}
+
+.stats {
+  border-style: solid;
+  float: left;
+  margin-top: 9%;
+  width: 35%;
+  min-width: 25%;
 }
