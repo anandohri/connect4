@@ -110,9 +110,17 @@ class Connect4 extends React.Component{
                         </div>)
         }
         else {
-          rowItem.push(<div className = 'boardCell'>
-                          <button className = 'blank' onClick = {() => this.handleMove(i, j)} />
-                        </div>)
+          const lower = (7 * (i + 1)) + j;
+          if(this.state.moves[lower] === 'player1' || this.state.moves[lower] === 'player2' || i === 5){
+            rowItem.push(<div className = 'boardCell'>
+                            <button className = 'blank' onClick = {() => this.handleMove(i, j)} />
+                          </div>)
+          }
+          else{
+            rowItem.push(<div className = 'boardCell'>
+                            <button className = 'blankUnmovable' onClick = {() => this.handleMove(i, j)} />
+                          </div>)
+          }
         }
       }
       rows.push(<div>{rowItem}</div>)
@@ -133,24 +141,36 @@ class Connect4 extends React.Component{
 
   handleMove = (i, j) => {
     const id = (7 * i) + j;
-    if(this.state.isWinner === 'NA'){
-      if(i === 5){
-        client.send(JSON.stringify({
-          type: "message",
-          user: this.state.uname,
-          move: id,
-          id: this.state.pnum
-        }))
-      }
-      else{
-        const lower = (7 * (i + 1)) + j;
-        if(this.state.moves[lower] === 'player1' || this.state.moves[lower] === 'player2'){
+    if(this.state.ready === 'y'){
+      if(this.state.isWinner === 'NA' && this.state.moves[id] !== 'player1' && this.state.moves[id] !== 'player2'){
+        if(this.state.prev === 0){
+          if(this.state.pnum === 1 && i === 5){
+            client.send(JSON.stringify({
+              type: "message",
+              user: this.state.uname,
+              move: id,
+              id: this.state.pnum
+            }))
+          }
+        } else if(i === 5 && this.state.pnum != this.state.prev){
           client.send(JSON.stringify({
             type: "message",
             user: this.state.uname,
             move: id,
             id: this.state.pnum
           }))
+        }
+        else{
+          const lower = (7 * (i + 1)) + j;
+          if((this.state.moves[lower] === 'player1' || this.state.moves[lower] === 'player2') 
+            && this.state.pnum != this.state.prev){
+            client.send(JSON.stringify({
+              type: "message",
+              user: this.state.uname,
+              move: id,
+              id: this.state.pnum
+            }))
+          }
         }
       }
     }
@@ -174,14 +194,13 @@ class Connect4 extends React.Component{
       if(dataFromServer.type === 'login' && dataFromServer.user === this.state.uname){
         this.setState({pnum: dataFromServer.id, isloggedin: true})
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.id == this.state.pnum && this.state.pnum !== this.state.prev) {
+      else if(dataFromServer.type === 'message' && dataFromServer.id == this.state.pnum) {
         const move = this.state.moves;
         move[dataFromServer.move] = 'player' + this.state.pnum;
         this.setState({moves: move, prev: this.state.pnum});
         this.calcWinner(this.state.pnum);
       }
-      else if(dataFromServer.type === 'message' && dataFromServer.id != this.state.pnum &&
-                (this.state.pnum === this.state.prev || this.state.prev === 0)) {
+      else if(dataFromServer.type === 'message' && dataFromServer.id != this.state.pnum) {
         if(this.state.pnum === 1){
           const move = this.state.moves;
           move[dataFromServer.move] = 'player2';
@@ -217,69 +236,77 @@ class Connect4 extends React.Component{
       <div>
         {this.state.isloggedin ?
         <div>
-          {this.state.isWinner != 'NA' ?
-          <div>
-            {this.state.pnum == this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length) ?
-              <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
-                  You Won
-              </h2>
-              : <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
-                    You Lost
-                </h2>
-            }
-            <h2 className = {`win${this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}`}>
-              ====Player{this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length)}:
-                    {this.state.isWinner.substring(0, this.state.isWinner.length-1)} WINS====
-            </h2>
-          </div>
-          : <div>
-            {this.state.pnum === 1? 
-              <h2 className = 'redMove'>You are Red</h2>
-              : <h2 className = 'blueMove'>You are Blue</h2>
-            }
-            {this.state.prev == 0 ? 
-              <div>
-                {this.state.ready === 'y' ? 
-                  <h2 className = 'firstMove'>Make a move</h2>
-                  : <h2 className = 'firstMove'>Waiting for other player to connect</h2>
-                }
-              </div>
-              : <div>
-                {this.state.prev != this.state.pnum ? 
-                  <div>
-                    {this.state.pnum == 1 ?
-                      <div>
-                        <h2 className = 'redMove'>Your Move</h2>
-                      </div>
-                      : <div>
-                          <h2 className = 'blueMove'>Your Move</h2>
-                        </div>
-                    }
-                  </div>
-                  : <div>
-                    {this.state.pnum == 1 ?
-                      <div>
-                        <h2  className = 'blueMove'>Blue's Move</h2>
-                      </div>
-                      : <div>
-                          <h2 className = 'redMove'>Red's Move</h2>
-                        </div>
-                    }
-                    </div>
-                }
-                </div>
+          <div className = 'stats'>
+            <p className = 'loggedInHeader'> Connect 4</p>
+            {this.state.isWinner != 'NA' ?
+            <div>
+              {this.state.pnum == this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length) ?
+                <p className = 'win'>
+                    You Won
+                </p>
+                : <p className = 'lost'>
+                      You Lost
+                  </p>
               }
             </div>
-          }
-          <div className = 'playBoard'>
-            {this.renderBoard()}
+            : <div className = 'basicInfo'>
+              {this.state.pnum === 1? 
+                <p className = 'redMove'>Name: {this.state.uname} <br />Color: Red</p>
+                : <p className = 'yellowMove'>Name: {this.state.uname} <br />Color: Yellow</p>
+              }
+              {this.state.prev == 0 ? 
+                <div>
+                  {this.state.ready === 'y' ? 
+                    <div>
+                      {this.state.pnum == 1 ?
+                        <div>
+                          <p className = 'redMove'>Current Move: Red</p>
+                        </div>
+                        : <div>
+                            <p className = 'redMove'>Current Move: Red</p>
+                          </div>
+                      }
+                    </div>
+                    : <p className = 'firstMove'>Waiting for other player to connect</p>
+                  }
+                </div>
+                : <div>
+                  {this.state.prev != this.state.pnum ? 
+                    <div>
+                      {this.state.pnum == 1 ?
+                        <div>
+                          <p className = 'redMove'>Current Move: Red</p>
+                        </div>
+                        : <div>
+                            <p className = 'yellowMove'>Current Move: Yellow</p>
+                          </div>
+                      }
+                    </div>
+                    : <div>
+                      {this.state.pnum == 1 ?
+                        <div>
+                          <p  className = 'yellowMove'>Current Move: Yellow</p>
+                        </div>
+                        : <div>
+                            <p className = 'redMove'>Current Move: Red</p>
+                          </div>
+                      }
+                      </div>
+                  }
+                  </div>
+                }
+              </div>
+            }
             <button className = 'restart' onClick = {this.handleRestart}>
               Restart Game
             </button>
           </div>
+          <div className = 'playBoard'>
+            {this.renderBoard()}
+          </div>
         </div>
         :<div> 
-          <p> Connect 4</p>
+          <p className = 'header'> Connect 4</p>
           <div className = 'login' >
             <input className = 'uname' placeholder = "Enter username" onChange = {this.handleChange} value = {this.state.uname} />
             <button className = 'submit' onClick = {() => this.handleLogin(this.state.uname)}>
