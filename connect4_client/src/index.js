@@ -241,12 +241,8 @@ class Connect4 extends React.Component{
             {this.state.isWinner != 'NA' ?
             <div>
               {this.state.pnum == this.state.isWinner.substring(this.state.isWinner.length-1, this.state.isWinner.length) ?
-                <p className = 'win'>
-                    You Won
-                </p>
-                : <p className = 'lost'>
-                      You Lost
-                  </p>
+                <p className = 'win'>===You Won===</p>
+                : <p className = 'lost'>===You Lost===</p>
               }
             </div>
             : <div className = 'basicInfo'>
