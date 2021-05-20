@@ -133,10 +133,15 @@ class Connect4 extends React.Component{
   }
 
   handleLogin = (val) => {
-    client.send(JSON.stringify({
-      type: "login",
-      user: val
-    }));
+    if(this.state.uname != ''){	
+      client.send(JSON.stringify({
+        type: "login",
+        user: val
+      }));
+    }
+    else{
+      alert('Please Enter Username');
+    }
   }
 
   handleMove = (i, j) => {
@@ -312,12 +317,6 @@ class Connect4 extends React.Component{
         </div>}
       </div>
     )
-  }
-}
-
-class Test extends React.Component{
-  render(){
-    return "hello".substring("hello".length - 1, "hello".length);
   }
 }
 
